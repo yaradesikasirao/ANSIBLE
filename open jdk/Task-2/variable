@@ -1,0 +1,7 @@
+tomcar_versions: "10.0.27"
+java_package_name: openjdk-11-jdk
+tomcat_package_name: tomcat
+group_name: tomcat
+user_name: tomcat
+home_name: /opt/tomcat
+owner_name: tomcat

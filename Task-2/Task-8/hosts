@@ -1,0 +1,5 @@
+[appservers]
+52.36.216.107 package_apache=httpd
+52.36.216.107 package_lamp='["php","php-mysqlnd"]'
+35.93.28.15 package_apache=apache2
+35.93.28.15 package_lamp='["php","libapache2-mod-php","php-mysql"]'

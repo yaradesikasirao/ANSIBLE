@@ -1,0 +1,41 @@
+---
+- name: dotnet installation 0n ubuntu
+  hosts: all
+  become: yes
+  tasks: 
+    - name: dotnet install on ubuntu
+      ansible.builtin.apt:
+         name: dotnet-sdk-7.0
+         state: present
+         update_cache: yes
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: dotnet install 
+      ansible.builtin.yum:
+        name: dotnet-sdk-7.0
+        update_cache: yes
+        state: present
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: create directory
+      ansible.builtin.file:
+         name: kasi
+         state: directory
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: create directory
+      ansible.builtin.file:
+         name: kasi
+         state: directory
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: get url
+      ansible.builtin.get_url:
+         src: https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb 
+         dest: ./kasi
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: get url
+      ansible.builtin.get_url:
+         url:  https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+         dest: ./kasi
+      when: ansible_facts['distribution'] == "CentOS"
+
+
+
+        

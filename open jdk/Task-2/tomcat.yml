@@ -1,0 +1,74 @@
+---
+- name: tomacat installation
+  hosts: all
+  become: yes
+  tasks: 
+    - name: install java
+      ansible.builtin.apt:
+        name: openjdk-11-jdk
+        state: present 
+    - name: groupadd for tomcat
+      ansible.builtin.group:
+        name: tomcat
+        state: present
+    - name: useradd for tomcat
+      ansible.builtin.user:
+        name: tomcat
+        create_home: true
+        shell: /bin/false tomcat
+        group: tomcat
+        home: /opt/tomcat
+        state: present
+    - name: get url download
+      ansible.builtin.get_url:
+        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.27/bin/apache-tomcat-10.0.27.tar.gz
+        dest: /tmp
+    - name: extract the tar file
+      ansible.builtin.unarchive:
+        src: /tmp/apache-tomcat-10.0.27.tar.gz
+        dest: /opt/tomcat/
+        remote_src: yes
+        mode: '777'
+    - name: create symobolic link
+      ansible.builtin.file:
+        src: /opt/tomcat/apache-tomcat-10.0.27
+        dest: /opt/tomcat/latest
+        owner: tomcat
+        group: tomcat
+        state: link
+        mode: '777'
+    - name: change the ownership
+      ansible.builtin.file:
+        path: /opt/tomcat
+        owner: tomcat
+        group: tomcat
+        recurse: yes
+        mode: '777'
+    # - name: user and group to tomcat
+    #   ansible.builtin.file:
+    #     path: /opt/tomcat
+    #     owner: tomcat
+    #     group: tomcat
+    #     mode: 777
+    - name: shell file
+      ansible.builtin.command: sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
+    - name: copy unit
+      ansible.builtin.copy:
+        src: ./kasi
+        dest: /etc/systemd/system/tomcat.service
+        remote_src: true
+        mode: '777'
+    - name: reload daemon and start tomcat
+      ansible.builtin.systemd:
+        name: tomcat
+        daemon_reload: yes
+        enabled: yes
+        state: started
+       
+  
+       
+         
+
+
+
+

@@ -1,0 +1,20 @@
+--- 
+- name: node install on centos
+  hosts: centos
+  become: yes
+  tasks:
+    - name: node install
+      ansible.builtin.yum:
+        name: 
+           - nodejs
+           - curl
+        update_cache: yes
+        state: present
+    - name: create directory
+      ansible.builtin.file:
+         name: kasi
+         state: directory
+    - name: get url
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+        dest: ./kasi  

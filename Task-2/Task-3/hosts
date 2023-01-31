@@ -1,0 +1,12 @@
+[ubunt]
+35.93.28.15 name=node1
+
+[centos]
+52.36.216.107 name=node2 
+
+[webservers]
+35.93.28.15  name=node3
+52.36.216.107 name=node4
+
+[webservers:vars]
+group= webservers

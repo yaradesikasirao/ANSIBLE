@@ -1,0 +1,56 @@
+---
+- name: installation of apache and php  on ubuntu
+  hosts: all
+  become: yes 
+  vars:  
+    - package_httpd: httpd
+    - package_lamp: '["php libapache2","mod-php","php-mysql"]'
+    - package_apache: apache2
+    - package_lamp: '["php", "php-mysqlnd"]'
+  tasks: 
+    - name: installations on ubuntu
+      ansible.builtin.apt:
+        name: "{{ package_apache }}"
+        state: present
+        update_cache: yes
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: installations on centos
+      ansible.builtin.yum:
+        name: "{{ package_httpd }}"
+        state: present
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: php on ubuntu
+      ansible.builtin.apt:
+        name: "{{ package_lamp }}"
+        state: present
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: php on centos
+      ansible.builtin.yum:
+        name: "{{ package_lamp }}"
+        state: present
+      when: ansible_facts['distribution'] == "CentOS"  
+    - name: copy file
+      ansible.builtin.copy:
+        src: ./kasi.txt
+        dest: /var/www/html/info.php
+    - name: service on ubuntu
+      ansible.builtin.systemd:
+        state: restarted
+        name: apache2
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: service on centos
+      ansible.builtin.systemd:
+        state: restarted
+        name: httpd
+      when: ansible_facts['distribution'] == "CentOS"
+  
+        
+
+
+
+      
+        
+
+
+
+      
